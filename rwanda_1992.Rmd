@@ -1,0 +1,30 @@
+---
+title: "Rwanda 1992"
+author: "Themenfeld SS 2021"
+date: "2021-05-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gapminder)
+library(dplyr)
+data(gapminder)
+```
+
+```{r}
+gapminder %>% filter(year==1992) %>% arrange(lifeExp)%>% head(3)
+```
+
+```{r}
+Rwanda = gapminder %>% filter(country == "Rwanda")
+plot(lifeExp ~ year, data = Rwanda, type = "b");grid()
+
+# custom function
+selCountry = function(land = "Rwanda"){
+  x = gapminder %>% filter(country == land)
+  plot(lifeExp ~ year, data = x, type = "b", main =land)
+}
+
+selCountry("Bangladesh")
+```

@@ -1,0 +1,89 @@
+---
+title: "class May 3rd"
+author: "Themenfeld SS 2021"
+date: "05/03/21"
+output: github_document
+---
+
+### Pop Quizzes
+Load the `gapminder` data!  
+
+1. Create a boxplot *gdpPercap vs. continent* and assign the “invisible” returned list to an object **gdpPercapVScontinent**.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gapminder)
+library(dplyr)
+data(gapminder)
+# get rid of tibble type
+# flights = as.data.frame(flights)
+```
+
+
+```{r}
+gdpPercapVScontinent <- boxplot(gapminder$gdpPercap ~ gapminder$continent, log = "y")
+```
+
+```{r}
+P75 = gdpPercapVScontinent$stats[4,3]
+P50 = gdpPercapVScontinent$stats[2,3]
+cat("upper quartile for Asia:", P75, "\n")
+IQR = P75-gdpPercapVScontinent$stats[2,3]
+cat("IQR for Asia:", IQR, "\n")
+```
+
+```{r}
+uBound <- P75 + 1.5 * IQR
+```
+
+```{r}
+gapminder %>% filter(continent == "Asia", gdpPercap <= uBound) %>% summarize(max(gdpPercap))
+```
+
+```{r}
+gapminder %>% filter(continent == "Asia", abs(gdpPercap) <= uBound) %>% summarize(max(gdpPercap))
+```
+
+```{r}
+gdpAsia = unlist(gapminder %>% filter(continent == "Asia") %>% select(gdpPercap))
+
+altBoundaries = mean(gdpAsia, na.rm=TRUE) + c(-1,1) * sd(gdpAsia, na.rm=TRUE)
+
+hist(gdpAsia,main = "Asia", xlab = "gdp")
+abline(v = gdpPercapVScontinent$stats[c(1,5),3], col = 2)
+abline(v = altBoundaries, col = "green")
+```
+
+mean -> median
+sd -> iqr
+
+
+
+
+
+
+
+
+....
+```{r}
+q25Asia <- gapminder %>% filter(continent == "Asia") %>% summarize(quantile(gdpPercap, probs = 0.25, na.rm =TRUE))
+q25Asia
+
+q75Asia <- gapminder %>% filter(continent == "Asia") %>% summarize(quantile(gdpPercap, probs = 0.75, na.rm =TRUE))
+q75Asia
+
+IQRAsia <- q75Asia -q25Asia
+IQRAsia
+
+outlier <- q75Asia + 1.5*IQRAsia
+outlier
+```
+
+```{r}
+meanAsia <- gapminder %>% filter(continent == "Asia") %>% summarize(mean(gdpPercap, na.rm = TRUE))
+sdAsia <- gapminder %>% filter(continent == "Asia") %>% summarize(sd(gdpPercap, na.rm = TRUE))
+
+newoutlier <- meanAsia + 3* sdAsia
+newoutlier
+```
+

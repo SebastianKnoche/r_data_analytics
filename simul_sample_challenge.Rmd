@@ -1,0 +1,81 @@
+---
+title: "Simulation / Random variables"
+author: "Sebastian Knoche"
+date: "04/27/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+* Idea: 10 samples, each of length 30
+* Each column in the matrix should be one sample
+```{r}
+my.rnorm.vector <- rnorm(n = 10*30, mean = 0, sd = 1)
+my.matrix <- matrix(my.rnorm.vector, nrow=30, ncol=10)
+```
+
+Inspecting the matrix
+```{r}
+head(my.matrix)
+```
+
+#### Your Task:
+Implement a function that takes the matrix as an input. The function computes the mean and the sample variance for each sample and returns a list of two elements.
+```{r}
+my.fun.calc.summary <- function(tmp.matrix){
+  my.mean <- apply(X = tmp.matrix, MARGIN = 2, FUN = mean)
+  my.var <- apply(X = tmp.matrix, MARGIN = 2, FUN = var)
+  tmp.list <- list(my.mean, my.var)
+  names(tmp.list) <- c("Mean","Variance")
+  return(tmp.list)
+}
+```
+
+Checking
+```{r}
+my.fun.calc.summary(my.matrix)
+```
+Checking further
+```{r}
+my.result <- my.fun.calc.summary(my.matrix)
+str(my.result)
+```
+
+#### Your Task II:
+Implement a modified function that returns a matrix where the first column is the column of means and the second is the column of variances.
+```{r}
+my.fun.calc.summary.v2 <- function(tmp.matrix){
+  tmp.list <- my.fun.calc.summary(tmp.matrix)
+  tmp.result = matrix(c(tmp.list$Mean, tmp.list$Variance), ncol = length(tmp.list), byrow = FALSE)
+  colnames(tmp.result) = names(tmp.list) #c("means","variances")
+  return(tmp.result)
+}
+```
+Checking
+```{r}
+my.fun.calc.summary.v2(my.matrix)
+```
+
+#### Your Task III:
+Up to a now the simulated data is static. Write a function my.simulation that has two arguments for the sample size and the number of samples. This first first generates the data and then calls your summary function to compute the summaries.
+
+> Idea: 10 samples, each of length 30
+Each column in the matrix should be one sample
+
+```{r}
+my.simulation <- function(nr.sample = 10, size=30){
+  my.rnorm.vector <- rnorm(n = nr.sample * size, mean = 0, sd = 1)
+  my.matrix <- matrix(my.rnorm.vector, nrow = size, ncol = nr.sample)
+  
+  my.fun.calc.summary.v2(my.matrix)
+}
+```
+
+Checking
+```{r}
+my.simulation(nr.sample = 4, size=30)
+my.simulation(nr.sample = 4, size=30)
+my.simulation()
+```

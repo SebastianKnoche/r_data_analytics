@@ -1,0 +1,29 @@
+---
+title: "Homework I, due Apr 26th"
+author: "M Loecher"
+date: "04/12/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### This homework is the absolute minimum extra work that you need to invest to keep up with the material in this course.
+
+1. The library `dplyr` offers efficient and elegant operations for data summaries/aggregations. Use the functions `group_by` and `summarise`to compute the mean `mpg` for each origin separately.\
+(A quick overview is given by [datacarpentry](https://datacarpentry.org/R-genomics/04-dplyr.html). 
+The author has published a very good book [R for Data Science](https://r4ds.had.co.nz) with a [relevant chapter]( https://r4ds.had.co.nz/transform.html#grouped-summaries-with-summarise) )
+
+2. Review your understanding of **quantiles** (and/or **percentiles**) and **quartiles**.\ 
+(A good beginning would be simply the [Wikipedia page](https://en.wikipedia.org/wiki/Quartile). Or the first chapter in the DataCamp course [Introduction to Statistics in R](https://learn.datacamp.com/courses/introduction-to-statistics-in-r).  Read up the help file for the R function `quantile` so that you know how to use it.
+
+3. Practice your understanding of **lists**: Work on section 6 in the DataCamp *Introduction to R* course.
+
+4. Deepen your understanding of **conditions**: Work on section 1 in the DataCamp *Intermediate R* course.
+
+5. Practice your  **for loops**: Work on section 2 in the DataCamp *Intermediate R* course.
+
+6. Deepen your understanding of the **apply** family: Work on section 4 in the DataCamp *Intermediate R* course.
+
+Another great free(!) book to learn from would be chapters 1-8 in [Advanced R](https://adv-r.hadley.nz) by Hadley Wickham

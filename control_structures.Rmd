@@ -1,0 +1,76 @@
+---
+title: "Control Structures"
+author: "Sebastian Knoche"
+date: "04/20/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#### exercises control structures ####
+
+#### if/else vs. ifelse vs. logical subsetting ####
+# 1. The following dataframe contains for 9 students
+#    the grades and the information
+#    whether the respective student cheated or not.
+
+df <- data.frame(id = 1:9,
+                 grade = c(2, 5, 3, 1, 6, 1, 4, 3, 1),
+                 cheated = c(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE))
+
+# Those who cheated get a grade 5. Set the value of grade to 5 for all students who cheated. . .
+# a) . . . using a for loop and if (loop over the row numbers)
+for(i in seq_along(df$id)) {
+  if(df$cheated[i]) 
+    df$grade[i] <- 5
+}
+
+# b) . . . using the vectorized version ifelse
+df$grade <- ifelse(df$cheated, 5, df$grade)
+
+# c) . . . using subsetting
+df$grade[df$cheated] <- 5
+
+# Hints:
+#  •Use seq_along to loop over the row number
+#  •Subsetting means an expression similar to x[x < 3]
+#  •You can select a variable of a dataframe by using $, e.g., df$grade
+#  •Check your result by displaying df
+
+#### Loops: for vs. while ####
+# 2. In general, every for loop can be written as a while loop
+# and vice versa. But in many cases, one of them is the better choice.
+# Unfortunately, the author of the following loops did not make a good choice.
+
+# a) Rewrite the following for loop as a while loop.
+x <- NULL
+for (i in 1:99999999) {
+  x <- c(x, sample(x = 1:10, size = 1))
+  if (sum(x) >= 100) break
+}
+x
+x <- NULL
+while (sum(x) <= 100){    # <= because the break condition
+                          # in the original function is AFTER the operation
+  x <- c(x, sample(x = 1:10, size = 1))
+}
+x
+# Why is this for loop so dangerous?
+
+# 
+
+# b) Rewrite the following while loop as a for loop:
+animals <- c("dog", "cat", "mouse", "snail")
+i <- 1
+while (i <= length(animals)) {
+  print(animals[i])
+  i <- i + 1
+}
+for(i in animals){
+  print(i)
+}
+```
+
