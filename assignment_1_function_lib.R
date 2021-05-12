@@ -6,18 +6,31 @@
 # simulate rolling the die a few thousand times (e.g. 10000)
 # estimate the expectation and the variance from this simulation data
 sim_die <- function(n=10000){
-  
+  tmp_die <- sample(1:6, n, replace = TRUE)
   #expectation/mean
-  e <-
+  e <- sum(tmp_die)/n
   #variance
-  v <-
+  v <- var(tmp_die)
   return(c(e,v))
 }
 
 
 # compute the average of 20 rolls several thousand times
 # and estimates the expectation and the variance of $\overline{Y}$
-
+sim_av20_die <- function(n=10000){
+  tmp_e <- c()
+  tmp_v <- c()
+  for(i in 1:n){
+    tmp_die <- sim_die(20)
+    tmp_e[i] <- tmp_die[1]
+    tmp_v[i] <- tmp_die[2]
+  }
+  #expectation/mean
+  e <- sum(tmp_e)/n
+  #variance
+  v <- sum(tmp_v)/n
+  return(c(e,v))
+}
   
 # compute a single t-statistic. This function has two arguments:
 # 1) `x`: vector having the realizations $x_{i} $.

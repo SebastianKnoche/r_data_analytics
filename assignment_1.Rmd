@@ -1,7 +1,7 @@
 ---
 title: "Data Analytics: Methoden und Programmierung"
 subtitle: "Assignment 1: computational statistics"
-author: "Themenfeld SS 2021 - Arbeitsgruppe"
+author: "Themenfeld SoSe 2021 - Arbeitsgruppe"
 date: "2021-05-11"
 output:
   html_document:
@@ -47,22 +47,36 @@ Now produce some code to simulate rolling the die. The computer should roll the 
 
 ```{r eval=FALSE}
 sim_die <- function(n=10000){
-  
+  tmp_die <- sample(1:6, n, replace = TRUE)
   #expectation/mean
-  e <-
+  e <- sum(tmp_die)/n
   #variance
-  v <-
+  v <- var(tmp_die)
   return(c(e,v))
 }
+```
+
+```{r}
+sim_die()
 ```
 
 ### 1.2   Variance of the mean
 
 Assume that you roll the die 20 times and then compute the average $(\overline{Y}=\frac{1}{n}\sum_{i}Y_{i})$ of the 20 values. This describes a new experiment and the average ($\overline{Y}$) is a new random variable. Compute (on a sheet of paper) the expectation and the variance of $\overline{Y}$
 
+$$\begin{align*}
+\mathrm{E}(\overline{Y}) & = Y_{1}\frac{1}{20}+Y_{2}\frac{1}{20}+...+Y_{19}\frac{1}{20}+Y_{20}\frac{1}{20}\\
+\\
+\mathrm{Var}(\overline{Y}) & = Y_{1}^{2}\frac{1}{20}+Y_{2}^{2}\frac{1}{20}+...+Y_{19}^{2}\frac{1}{20}+Y_{20}^{2}\frac{1}{20}-{E}(\overline{Y})^{2}\\
+\end{align*}$$
+
 #### 1.2.1    By simulation
 
 Write a function that computes the average of 20 rolls several thousand times and estimates the expectation and the variance of $\overline{Y}$
+
+```{r}
+sim_av20_die()
+```
 
 ## 2    Hypothesis testing (12 Points)
 
