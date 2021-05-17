@@ -108,15 +108,12 @@ is.vowel(c("e","g"))
 ## [1] TRUE
 ```
 
-> `is.fowel()` checks if the first argument has the value associated with one of the vowels. `"e"` meets the criterium of `char == "e"`, so `TRUE` is returned. Either way, the first comparison leads to an execution of `return()` and therefore exits the function. All other values after the first one are ignored.
+> `is.fowel()` checks if the first argument has a value associated with one of the vowels defined. `"e"` meets the criterium of `char == "e"`, so `TRUE` is returned. Either way, the first comparison leads to an execution of `return()` and therefore exits the function. All other values after the first one are ignored.
 
 
 ### 1.2 Extension
 
 Now write a function `remove.vowels(string)` that removes all vowels in the sentence. Are the linguists right?
-
-
-
 
 
 
@@ -139,15 +136,6 @@ Now we apply the function to the string:
 
 ```r
 strwrap(remove.vowels(text.1) )
-```
-
-```
-## [1] "Trs f th cmps wr vry pplr. Stdnt gds shwd mr thn 100 crs gsts rnd th"
-## [2] "cmps, nswrng rng f qstns n th wy."
-```
-
-```r
-strwrap(remove.vowels2(text.1) )
 ```
 
 ```
@@ -182,7 +170,8 @@ is.vowel.vect(c("a","b","c","i"))
 ```
 
 ```
-## [1]  TRUE FALSE FALSE  TRUE
+##     a     b     c     i 
+##  TRUE FALSE FALSE  TRUE
 ```
 
 ## 2 Interchange Letters
@@ -192,8 +181,6 @@ According to a second theory, it is still possible to read a text, if only the f
 ### 2.1 Step 1
 
 Write a function that randomly interchanges all the letters of a word.
-
-
 
 
 
@@ -214,7 +201,7 @@ interchange.word("Testfunction")
 ```
 
 ```
-## [1] "uocstnenTift"
+## [1] "cnesitunoTtf"
 ```
 
 
@@ -223,7 +210,7 @@ interchange.word("Testfunction")
 ```
 
 ```
-## [1] "tcetfonsinTu"
+## [1] "noecstitTfnu"
 ```
 
 ### 2.2 Step 2
@@ -236,79 +223,104 @@ Hence, Tes. is a three-character word and therefore nothing will be changed. Use
 In summary, the function header should look like this:
 
 
-```r
-interchange.middle.of.word <- function(string, exclude=c(",",".","!","?"))
-```
-
-
-
-
-
 
 Testing the function:
 
 
 ```r
-#interchange.middle.of.word("Tes")
+interchange.middle.of.word("Tes")
+```
+
 ```
 ## [1] "Tes"
+```
 
 
 ```r
-#interchange.middle.of.word("Tes")
+interchange.middle.of.word("Tes")
+```
+
 ```
 ## [1] "Tes"
+```
 
 
 ```r
-#interchange.middle.of.word("Hm?")
+interchange.middle.of.word("Hm?")
+```
+
 ```
 ## [1] "Hm?"
+```
 
 
 ```r
-#interchange.middle.of.word("Hm!")
+interchange.middle.of.word("Hm!")
+```
+
 ```
 ## [1] "Hm!"
-
-
-```r
-#interchange.middle.of.word("well!")
 ```
-## [1] "wlel!"
 
 
 ```r
-#interchange.middle.of.word("well!")
+interchange.middle.of.word("well!")
 ```
-## [1] "wlel!"
 
-
-```r
-#interchange.middle.of.word("well!")
 ```
 ## [1] "well!"
+```
 
 
 ```r
-#interchange.middle.of.word("hello?")
+interchange.middle.of.word("well!")
 ```
-## [1] "hlleo?"
+
+```
+## [1] "well!"
+```
 
 
 ```r
-#interchange.middle.of.word("Testfunction!")
+interchange.middle.of.word("well!")
 ```
-## [1] "Teuifcsotntn!"
+
+```
+## [1] "well!"
+```
 
 
 ```r
-#interchange.middle.of.word("Testfunction?")
+interchange.middle.of.word("hello?")
 ```
-## [1] "Tuostctfnein?"
+
+```
+## [1] "hlelo?"
+```
 
 
 ```r
-#interchange.middle.of.word("Testfunction,")
+interchange.middle.of.word("Testfunction!")
 ```
-## [1] "Tttnosecifun,"
+
+```
+## [1] "Tufscotneitn!"
+```
+
+
+```r
+interchange.middle.of.word("Testfunction?")
+```
+
+```
+## [1] "Tsicutoeftnn?"
+```
+
+
+```r
+interchange.middle.of.word("Testfunction,")
+```
+
+```
+## [1] "Tefuitntscon,"
+```

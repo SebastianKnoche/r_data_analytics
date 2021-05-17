@@ -211,7 +211,7 @@ pre code {
 <pre class="r"><code>is.vowel(c(&quot;e&quot;,&quot;g&quot;))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <blockquote>
-<p><code>is.fowel()</code> checks if the first argument has the value associated with one of the vowels. <code>&quot;e&quot;</code> meets the criterium of <code>char == &quot;e&quot;</code>, so <code>TRUE</code> is returned. Either way, the first comparison leads to an execution of <code>return()</code> and therefore exits the function. All other values after the first one are ignored.</p>
+<p><code>is.fowel()</code> checks if the first argument has a value associated with one of the vowels defined. <code>&quot;e&quot;</code> meets the criterium of <code>char == &quot;e&quot;</code>, so <code>TRUE</code> is returned. Either way, the first comparison leads to an execution of <code>return()</code> and therefore exits the function. All other values after the first one are ignored.</p>
 </blockquote>
 </div>
 <div id="extension" class="section level3">
@@ -227,9 +227,6 @@ strwrap(text.1)</code></pre>
 <pre class="r"><code>strwrap(remove.vowels(text.1) )</code></pre>
 <pre><code>## [1] &quot;Trs f th cmps wr vry pplr. Stdnt gds shwd mr thn 100 crs gsts rnd th&quot;
 ## [2] &quot;cmps, nswrng rng f qstns n th wy.&quot;</code></pre>
-<pre class="r"><code>strwrap(remove.vowels2(text.1) )</code></pre>
-<pre><code>## [1] &quot;Trs f th cmps wr vry pplr. Stdnt gds shwd mr thn 100 crs gsts rnd th&quot;
-## [2] &quot;cmps, nswrng rng f qstns n th wy.&quot;</code></pre>
 </div>
 <div id="sets" class="section level3">
 <h3>1.3 Sets</h3>
@@ -239,7 +236,8 @@ strwrap(text.1)</code></pre>
 <p>Write down (on paper) a function <code>is.vowel.vect</code> that accepts a vector of characters as an input.</p>
 <p>Testing</p>
 <pre class="r"><code>is.vowel.vect(c(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;i&quot;))</code></pre>
-<pre><code>## [1]  TRUE FALSE FALSE  TRUE</code></pre>
+<pre><code>##     a     b     c     i 
+##  TRUE FALSE FALSE  TRUE</code></pre>
 </div>
 </div>
 <div id="interchange-letters" class="section level2">
@@ -252,62 +250,39 @@ strwrap(text.1)</code></pre>
 <pre class="r"><code>interchange.word(&quot;of&quot;)</code></pre>
 <pre><code>## [1] &quot;fo&quot;</code></pre>
 <pre class="r"><code>interchange.word(&quot;Testfunction&quot;)</code></pre>
-<pre><code>## [1] &quot;uocstnenTift&quot;</code></pre>
+<pre><code>## [1] &quot;cnesitunoTtf&quot;</code></pre>
 <pre class="r"><code>interchange.word(&quot;Testfunction&quot;)</code></pre>
-<pre><code>## [1] &quot;tcetfonsinTu&quot;</code></pre>
+<pre><code>## [1] &quot;noecstitTfnu&quot;</code></pre>
 </div>
 <div id="step-2" class="section level3">
 <h3>2.2 Step 2</h3>
 <p>Now write a function that exchanges only the characters of the middle of the word (between first and last character) Use your function from step 1. The function should not change anything, if the word is composed of less than 4 characters.</p>
 <p>The function has an argument called exclude which is vector of potential punctuation marks at the end of a word. You can assume that there is only one possible punctuation mark. If there is such a mark, it should not be changed and not counted towards the number of characters the actual word is composed of. Hence, Tes. is a three-character word and therefore nothing will be changed. Use the following vector of punctuation marks: exclude=c(“,”,“.”,“!”,“?”).</p>
 <p>In summary, the function header should look like this:</p>
-<pre class="r"><code>interchange.middle.of.word &lt;- function(string, exclude=c(&quot;,&quot;,&quot;.&quot;,&quot;!&quot;,&quot;?&quot;))</code></pre>
 <p>Testing the function:</p>
-<pre class="r"><code>#interchange.middle.of.word(&quot;Tes&quot;)</code></pre>
+<pre class="r"><code>interchange.middle.of.word(&quot;Tes&quot;)</code></pre>
+<pre><code>## [1] &quot;Tes&quot;</code></pre>
+<pre class="r"><code>interchange.middle.of.word(&quot;Tes&quot;)</code></pre>
+<pre><code>## [1] &quot;Tes&quot;</code></pre>
+<pre class="r"><code>interchange.middle.of.word(&quot;Hm?&quot;)</code></pre>
+<pre><code>## [1] &quot;Hm?&quot;</code></pre>
+<pre class="r"><code>interchange.middle.of.word(&quot;Hm!&quot;)</code></pre>
+<pre><code>## [1] &quot;Hm!&quot;</code></pre>
+<pre class="r"><code>interchange.middle.of.word(&quot;well!&quot;)</code></pre>
+<pre><code>## [1] &quot;well!&quot;</code></pre>
+<pre class="r"><code>interchange.middle.of.word(&quot;well!&quot;)</code></pre>
+<pre><code>## [1] &quot;well!&quot;</code></pre>
+<pre class="r"><code>interchange.middle.of.word(&quot;well!&quot;)</code></pre>
+<pre><code>## [1] &quot;well!&quot;</code></pre>
+<pre class="r"><code>interchange.middle.of.word(&quot;hello?&quot;)</code></pre>
+<pre><code>## [1] &quot;hlelo?&quot;</code></pre>
+<pre class="r"><code>interchange.middle.of.word(&quot;Testfunction!&quot;)</code></pre>
+<pre><code>## [1] &quot;Tufscotneitn!&quot;</code></pre>
+<pre class="r"><code>interchange.middle.of.word(&quot;Testfunction?&quot;)</code></pre>
+<pre><code>## [1] &quot;Tsicutoeftnn?&quot;</code></pre>
+<pre class="r"><code>interchange.middle.of.word(&quot;Testfunction,&quot;)</code></pre>
+<pre><code>## [1] &quot;Tefuitntscon,&quot;</code></pre>
 </div>
-</div>
-<div id="tes" class="section level2">
-<h2>[1] “Tes”</h2>
-<pre class="r"><code>#interchange.middle.of.word(&quot;Tes&quot;)</code></pre>
-</div>
-<div id="tes-1" class="section level2">
-<h2>[1] “Tes”</h2>
-<pre class="r"><code>#interchange.middle.of.word(&quot;Hm?&quot;)</code></pre>
-</div>
-<div id="hm" class="section level2">
-<h2>[1] “Hm?”</h2>
-<pre class="r"><code>#interchange.middle.of.word(&quot;Hm!&quot;)</code></pre>
-</div>
-<div id="hm-1" class="section level2">
-<h2>[1] “Hm!”</h2>
-<pre class="r"><code>#interchange.middle.of.word(&quot;well!&quot;)</code></pre>
-</div>
-<div id="wlel" class="section level2">
-<h2>[1] “wlel!”</h2>
-<pre class="r"><code>#interchange.middle.of.word(&quot;well!&quot;)</code></pre>
-</div>
-<div id="wlel-1" class="section level2">
-<h2>[1] “wlel!”</h2>
-<pre class="r"><code>#interchange.middle.of.word(&quot;well!&quot;)</code></pre>
-</div>
-<div id="well" class="section level2">
-<h2>[1] “well!”</h2>
-<pre class="r"><code>#interchange.middle.of.word(&quot;hello?&quot;)</code></pre>
-</div>
-<div id="hlleo" class="section level2">
-<h2>[1] “hlleo?”</h2>
-<pre class="r"><code>#interchange.middle.of.word(&quot;Testfunction!&quot;)</code></pre>
-</div>
-<div id="teuifcsotntn" class="section level2">
-<h2>[1] “Teuifcsotntn!”</h2>
-<pre class="r"><code>#interchange.middle.of.word(&quot;Testfunction?&quot;)</code></pre>
-</div>
-<div id="tuostctfnein" class="section level2">
-<h2>[1] “Tuostctfnein?”</h2>
-<pre class="r"><code>#interchange.middle.of.word(&quot;Testfunction,&quot;)</code></pre>
-</div>
-<div id="tttnosecifun" class="section level2">
-<h2>[1] “Tttnosecifun,”</h2>
 </div>
 
 
