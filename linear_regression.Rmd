@@ -1,0 +1,218 @@
+---
+title: "Linear Regression"
+subtitle: "How to create modles and test them"
+author: "Themenfeld SS 2021"
+date: "`r format(file.info(knitr::current_input())$atime, '%Y-%m-%d')`"
+output:
+  html_document:
+    keep_md: yes
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+packages = c(
+  "dplyr",
+#  "ggplot2",
+  "wooldridge")
+
+## Now load or install&load all
+package.check <- lapply(
+  packages,
+  FUN = function(x) {
+    if (!require(x, character.only = TRUE)) {
+      install.packages(x, dependencies = TRUE)
+      library(x, character.only = TRUE)
+    }
+  }
+)
+```
+
+# 1   Loading and inspecting the data
+
+```{r 1   Loading and inspecting the data}
+data(hprice1)
+```
+
+## 1.1    A glimpse
+
+```{r 1.1   A glimpse}
+glimpse(hprice1)
+```
+
+## 1.2    Use the help function to inspect details of the dataset
+
+```{r 1.2    Use the help function to inspect details of the dataset, eval=FALSE}
+?hprice1
+```
+
+# 2   A first regression
+
+```{r 2   A first regression}
+my.lm1 <- lm(price ~ sqrft, data=hprice1)
+summary(my.lm1)
+```
+
+## 2.1    Note:
+We can define the formula separately
+
+```{r 2.1    We can define the formula separately}
+my.formula <- as.formula("price ~ sqrft")
+my.lm2 <- lm(my.formula, data=hprice1)
+```
+
+### 2.1.1    Further hint
+
+```{r 2.1.1    Further hint}
+as.character(my.formula)
+```
+
+## 2.2    Using predict for predictions
+
+```{r 2.2    Using predict for predictions}
+my.price.hat <- predict(my.lm1)
+head(my.price.hat)
+```
+
+# 3   Random data subsets
+A simple way of obtaining a random sample is the following:
+
+*First, reorder rows randomly  
+*Second, take (for example) the first 80 percent of the rows  
+
+```{r 3   Random data subsets}
+my.random.index <- sample(nrow(hprice1), replace = FALSE)
+head(my.random.index)
+```
+
+# 4    Tasks:
+
+* Write a function my.RSS with two inputs: a string describing the formula and the dataset. The function carries out the regression and returns the RSS (residual sum of squares)  
+* Write a function that has two input arguments: a data and a number for the split (e.g. 0.8 for 80 percent). The function returns randomly selected training and test datasets  
+
+## 4.1   Task 1: Testing
+
+```{r function definition my.RSS, echo=FALSE}
+# two inputs: a string describing the formula and the dataset.
+# carries out the regression and returns the RSS.
+my.RSS <- function(my.str = "price ~ sqrft", my.data=hprice1){
+  # convert formula string to formula
+  tmp_formula <- as.formula(my.str)
+  # carry out the regression
+  tmp_lm <- lm(tmp_formula, data=my.data)
+  tmp_rss <- sum((my.lm2$residuals)^2)
+  return(tmp_rss)
+}
+```
+
+```{r function call my.RSS}
+my.RSS(my.str = "price ~ sqrft", my.data=hprice1)
+```
+
+## 4.2   Task 2: Testing 1
+
+```{r function definition my.data.select1}
+# two input arguments: a data and a number for the split.
+# returns randomly selected training and test datasets
+my.data.select1 <- function(my.data = hprice1, split=0.8){
+  # absolute size of the sample
+  sample_size <- round(split * nrow(my.data))
+  # create a training dataset as a sample of the data
+  training_data <- sample_n(my.data, sample_size)
+  # indices of the samples used in training dataset
+  sample_id <- as.numeric(rownames(training_data))
+  # create a test dataset of the remainder of the data
+  test_data <- my.data[-sample_id,]
+  return(list(traindata = training_data,testdata = test_data))
+}
+```
+
+```{r function definition my.data.select2}
+# two input arguments: a data and a number for the split.
+# returns randomly selected training and test datasets
+my.data.select2 <- function(my.data = hprice1, split=0.8){
+  # absolute size of the sample
+  sample_size <- round(split * nrow(my.data))
+  # create a training dataset as a sample of the data
+  training_data <- my.data[sample(nrow(my.data),sample_size, replace = FALSE),]
+  # indices of the samples used in training dataset
+  sample_id <- as.numeric(rownames(training_data))
+  # create a test dataset of the remainder of the data
+  test_data <- my.data[-sample_id,]
+  return(list(traindata = training_data,testdata = test_data))
+}
+```
+
+```{r function call my.data.select1+2}
+my.datasets1 <- my.data.select1(my.data = hprice1, split=0.8)
+glimpse(my.datasets1)
+my.datasets2 <- my.data.select2(my.data = hprice1, split=0.8)
+glimpse(my.datasets2)
+```
+
+## 4.3   Task 2: Testing 2
+
+```{r function call my.data.select1+2}
+my.datasets1 <- my.data.select1(my.data = hprice1, split=0.8)
+glimpse(my.datasets1)
+my.datasets2 <- my.data.select2(my.data = hprice1, split=0.8)
+glimpse(my.datasets2)
+```
+
+
+```{r predict.test}
+my.lm2.1 <- lm(my.formula, data=my.datasets1$traindata)
+summary(my.lm2.1)
+my.lm2.2 <- lm(my.formula, data=my.datasets2$traindata)
+summary(my.lm2.2)
+
+predict.test1 <- predict(my.lm2.1, newdata = my.datasets1$testdata)
+head(predict.test1)
+predict.test2 <- predict(my.lm2.2, newdata = my.datasets2$testdata)
+head(predict.test2)
+```
+
+
+
+
+```{r  function definition my.RSSTrainTest_, eval=FALSE, echo=FALSE}
+my.RSSTrainTest = function(formula,my.data,split){
+  # create Dataset
+  fn.dataset = my.data.select(my.data = my.data, split = split)
+  
+  # get regression using traindata
+  fn.lm = lm(formula, data = fn.dataset$traindata)
+  
+  # Use Regression to make predictions
+  ## based on traindata
+  predict.train = predict(fn.lm)
+  ## based on testdata
+  predict.test = predict(fn.lm,newdata = fn.dataset$traindata)
+  
+
+}
+```
+
+```{r  function definition my.RSSTrainTest}
+my.RSSTrainTest <- function(my.str = "price ~ sqrft", my.data = hprice1, split = 0.8){
+  tmp_datasets1 = my.data.select1(my.data = my.data, split = split)
+  tmp_datasets2 = my.data.select2(my.data = my.data, split = split)
+  
+  tmp_rss_train1 <- my.RSS(my.str = my.str, my.data = my.datasets1$traindata)
+  tmp_rss_test1 <- my.RSS(my.str = my.str, my.data = my.datasets1$testdata)
+  tmp_rss_train2 <- my.RSS(my.str = my.str, my.data = my.datasets2$traindata)
+  tmp_rss_test2 <- my.RSS(my.str = my.str, my.data = my.datasets2$testdata)
+  
+  print(paste("price1", my.datasets1$traindata$price[1]))
+  print(paste("rss_train1 + rss_test1", tmp_rss_train1 + tmp_rss_test1, "rss_train2 + rss_test2", tmp_rss_train2 + tmp_rss_test2))
+}
+```
+
+
+```{r function call my.RSSTrainTest}
+my.RSSTrainTest("price ~ sqrft", my.data=hprice1, split=0.8)
+```
+
+```{r function call my.RSSTrainTest}
+my.RSSTrainTest("price ~ sqrft", my.data=hprice1, split=0.8)
+```

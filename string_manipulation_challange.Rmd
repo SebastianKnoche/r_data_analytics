@@ -1,7 +1,7 @@
 ---
 title: "String Manipulation Challenge"
 author: "Sebastian Knoche"
-date: "2021-05-04"
+date: "`r format(file.info(knitr::current_input())$atime, '%Y-%m-%d')`"
 output:
   html_document:
     keep_md: yes
@@ -351,6 +351,31 @@ interchange.middle.of.word <- function(string, exclude=c(",",".","!","?")){
       )
     )
   }
+  
+  # interchange.middle.of.word = function(string,exclude=c(",",".","!","?")){
+  # #  Regular Expression for gsub
+  # ExcludeRegEx = paste(c("[",exclude,"]","$"),collapse = "")
+  # # Remove excluded chars
+  # CharOnly = gsub(ExcludeRegEx,"",string)
+  # #Generate Vector
+  # CharOnly.Vec = unlist(strsplit(CharOnly,split = ""))
+  # 
+  # if (nchar(CharOnly) < 4)
+  # return(string)
+  # else 
+  #   paste(
+  #     c(
+  #       CharOnly.Vec[1],
+  #       interchange.word(
+  #         substr(
+  #           CharOnly,2,
+  #           length(CharOnly.Vec)-1
+  #         )
+  #       ),
+  #       substring(string,length(CharOnly.Vec))),
+  #   collapse = "")
+  # 
+  # }
 }
 ```
 

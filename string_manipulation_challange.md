@@ -1,7 +1,7 @@
 ---
 title: "String Manipulation Challenge"
 author: "Sebastian Knoche"
-date: "2021-05-04"
+date: "2021-05-10"
 output:
   html_document:
     keep_md: yes
@@ -201,7 +201,7 @@ interchange.word("Testfunction")
 ```
 
 ```
-## [1] "cnesitunoTtf"
+## [1] "Tinctfnuseto"
 ```
 
 
@@ -210,7 +210,7 @@ interchange.word("Testfunction")
 ```
 
 ```
-## [1] "noecstitTfnu"
+## [1] "cunsfoentTit"
 ```
 
 ### 2.2 Step 2
@@ -268,7 +268,7 @@ interchange.middle.of.word("well!")
 ```
 
 ```
-## [1] "well!"
+## [1] "wlel!"
 ```
 
 
@@ -286,7 +286,7 @@ interchange.middle.of.word("well!")
 ```
 
 ```
-## [1] "well!"
+## [1] "wlel!"
 ```
 
 
@@ -304,7 +304,7 @@ interchange.middle.of.word("Testfunction!")
 ```
 
 ```
-## [1] "Tufscotneitn!"
+## [1] "Tcofstinetun!"
 ```
 
 
@@ -313,7 +313,7 @@ interchange.middle.of.word("Testfunction?")
 ```
 
 ```
-## [1] "Tsicutoeftnn?"
+## [1] "Tsucitefotnn?"
 ```
 
 
@@ -322,5 +322,5 @@ interchange.middle.of.word("Testfunction,")
 ```
 
 ```
-## [1] "Tefuitntscon,"
+## [1] "Tontutiesfcn,"
 ```

@@ -1,8 +1,11 @@
 ---
 title: "Deaths by State"
 author: "Themenfeld SS 2021"
-date: "05/03/2021"
-output: github_document
+date: "`r format(file.info(knitr::current_input())$atime, '%Y-%m-%d')`"
+output:
+  html_document:
+    keep_md: yes
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
