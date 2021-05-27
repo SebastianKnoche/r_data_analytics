@@ -1,0 +1,122 @@
+---
+title: "LPM Model fit problem"
+subtitle: ""
+author: "Themenfeld SS 2021"
+date: "`r format(file.info(knitr::current_input())$atime, '%Y-%m-%d')`"
+output:
+  html_document:
+    keep_md: yes
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+packages = c(
+  "dplyr",
+#  "ggplot2",
+  "wooldridge")
+
+## Now load or install&load all
+package.check <- lapply(
+  packages,
+  FUN = function(x) {
+    if (!require(x, character.only = TRUE)) {
+      install.packages(x, dependencies = TRUE)
+      library(x, character.only = TRUE)
+    }
+  }
+)
+```
+
+There has been much interest in the question whether the presence of 401(k) pension plans, available to many U.S. workers, increases net savings.  
+The data set `k401ksubs` contains information on net financial assets (`nettfa`), family income (`inc`), a binary variable for eligibility in a 401(k) plan (`e401k`), and several other variables. In the following, you are asked to run a linear regression that predicts eligibility.
+
+```{r load k401ksubs dataset, echo=FALSE}
+data("k401ksubs")
+```
+
+```{r glimpse}
+glimpse(k401ksubs)
+```
+
+## 1 Tasks
+
+### 1.1 Fitting and interpreting
+
+* How many families are eligible and how many are not eligible for participation in a 401(k) plan? Present the absolute numbers and the respective fractions.  
+
+```{r echo=FALSE}
+n_observations <- length(k401ksubs$e401k)
+fam_eligible <- sum(k401ksubs$e401k)
+fam_not_e <- n_observations - fam_eligible
+```
+
+> For a total of  **`r n_observations`** observations, **`r fam_eligible`** families are eligible for participation in a 401(k) plan, while **`r fam_not_e`** are not eligible.
+
+* Estimate a linear probability model explaining 401(k) eligibility in terms of income, age, and gender. Include income and age in quadratic form, and report the results in the usual form.  
+
+```{r echo=FALSE}
+mlm_eligible <- lm(e401k ~ inc + incsq + age + agesq + male, data = k401ksubs)
+mlm_eligible_0 <- round(mlm_eligible$coefficients[1], 4)
+mlm_eligible_1 <- round(mlm_eligible$coefficients[2], 4)
+mlm_eligible_2 <- round(mlm_eligible$coefficients[3], 4)
+mlm_eligible_3 <- round(mlm_eligible$coefficients[4], 4)
+mlm_eligible_4 <- round(mlm_eligible$coefficients[5], 4)
+mlm_eligible_5 <- round(mlm_eligible$coefficients[6], 4)
+mlm_eligible_smry <- summary(mlm_eligible)
+mlm_eligible_r_sqr <- round(mlm_eligible_smry$r.squared, 4) * 100
+```
+
+> $\begin{align*}
+e401k & = `r mlm_eligible_0` + `r mlm_eligible_1` income + `r mlm_eligible_2` income^{2} + `r mlm_eligible_3` age + (`r mlm_eligible_4`) age^{2} + (`r mlm_eligible_5`) male + u \\  
+R^{2} & = `r mlm_eligible_r_sqr`\% ;    Sample size = `r length(k401ksubs[[1]])` \\
+\end{align*}$  
+
+* Interpret the coefficients.  
+
+> While negative propabilities (coefficients with negative foresign) do not make sense in general, the negative coefficient for $male$ can be interpreted in a way, that it only increases the propability if the respondent is female ($1-male$).  
+The coefficient for income seems to have the biggest influence given the reletively big factor $income$ and the value for the coefficient.  
+The coefficients for $age$ - especialy with it's relatively small factor $age$ - and $income^{2}$ have rather small values and do not seem to have much of an impact on the total propability.
+
+* Obtain the fitted values from the linear probability model estimated in part (ii). Are any fitted values negative or greater than one?
+
+```{r echo=FALSE}
+mlm_eligible_fitted <- mlm_eligible$fitted.values
+mlm_eligible_fitted_min <- min(mlm_eligible_fitted)
+mlm_eligible_fitted_max <- max(mlm_eligible_fitted)
+```
+
+> The smallest fitted value from the model is `r mlm_eligible_fitted_min` (positive), while the largest fitted value is `r mlm_eligible_fitted_max` (smaller than one).
+
+### 1.2 Discussing model fit
+
+* Using the fitted values $\hat{e401k}_{i}$ from part (iv), define $\tilde{e401k}_{i} = 1$ if $\tilde{e401k}_{i} \ge 0.5$ and $\tilde{e401k}_{i} = 0$ if $\tilde{e401k}_{i} < 0.5$. Out of 9,275 families, how many are predicted to be eligible for a 401(k) plan?  
+
+```{r echo=FALSE}
+mlm_eligible_binary_fitted <- round(mlm_eligible_fitted)
+mlm_eligible_binary <- mlm_eligible
+mlm_eligible_binary$fitted.values <- mlm_eligible_binary_fitted
+mlm_eligible_binary_smry <- summary(mlm_eligible_binary)
+mlm_eligible_binary_r_sqr <- round(mlm_eligible_binary_smry$r.squared, 4) * 100
+
+fam_binary_eligible <- sum(mlm_eligible_binary_fitted)
+fam_binary_not_e <- n_observations - fam_binary_eligible
+```
+
+> Out of  **`r n_observations`** families, **`r fam_binary_eligible`** families are predicted to be eligible for a 401(k) plan, while **`r fam_binary_not_e`** are not.
+
+* Use the variable $\tilde{e401k}_{i}$ to compute the overall percent of correctly predicted/classified observations (families).  
+
+> The overall percent of correctly predicted/classified observations (families), using $\tilde{e401k}_{i}$ is `r mlm_eligible_binary_r_sqr`%.
+
+* Now compute the percent correctly predicted/classified for both eligible and non-eligible families. What
+does this suggest regarding your previously computed measure of model fit?
+
+### 1.3 Writing a function
+
+Now write a function that accepts a vector thresholds for predicting a family as eligible vs non-eligible. For
+example, the function accepts c(0.5, 0.6) as an input parameter.
+The function takes the data and the formula as an input. The function performs the following steps:
+• It runs the regression (specified in the formula-argument)
+• Then, it uses the threshold and computes the overall percent of correctly classified observations and
+also the the percent correctly predicted/classified for both eligible and non-eligible families.
