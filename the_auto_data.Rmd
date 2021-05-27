@@ -1,0 +1,169 @@
+---
+title: "The Auto data"
+author: "Themenfeld SS 2021"
+date: "`r format(file.info(knitr::current_input())$atime, '%Y-%m-%d')`"
+output:
+  html_document:
+    keep_md: yes
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(ISLR)
+data(Auto)
+```
+
+## Book 5.1
+
+```{r}
+hist(Auto$weight, xlab = "weight", col = "blue");grid()
+(weightSum = summary(Auto$weight))
+```
+
+```{r}
+abline(v=weightSum["Median"],col=3)
+abline(v=weightSum["Mean"],col=2)
+abline(v=weightSum["3rd Qu."],col="orange", lty=2)
+```
+
+```{r}
+par(mfrow=c(1,2))
+x = Auto$weight
+
+
+LE = seq(2978-100,2978+100,by=1)
+L2 = vector()
+for (i in 1:length(LE)){
+  l = LE[i]
+  L2[i] = mean((x-l)^2)
+} 
+plot(LE, L2, type="l",main ="Mean minimizes L2/MSE");grid()
+abline(v=weightSum["Mean"],col=2)
+
+LE = seq(2804-100,2804+100,by=1)
+L1 = vector()
+for (i in 1:length(LE)){
+  l = LE[i]
+  L1[i] = mean(abs(x-l))
+} 
+plot(LE, L1, type="l",main ="Median minimizes L1");grid()
+abline(v=weightSum["Median"],col=3)
+
+
+```
+
+## Book 6.3
+
+```{r}
+plot(mpg ~ weight, data = Auto,col = rgb(0,0,1,0.5), pch=20,xlim=c(250, 7000), ylim = c(0,45));grid()
+LSfit = lm(mpg ~ weight, data = Auto)
+
+#overlay regression line
+abline(LSfit, col="darkgreen",lwd=2)
+```
+
+```{r}
+summary(LSfit)
+```
+
+```{r}
+plot(mpg ~ weight, data = Auto,col = rgb(0,0,1,0.5), pch=20,xlim=c(250, 7000), ylim = c(0,45));grid()LSfit = lm(mpg ~ weight, data = Auto)#overlay regression lineabline(LSfit, col="darkgreen",lwd=2)
+
+summary(LSfit)
+```
+
+```{r}
+cov(Auto$mpg, Auto$weight)
+
+cov(Auto$mpg, Auto$weight)/var(Auto$weight)
+
+cor(Auto$mpg, Auto$weight)
+
+cov(Auto$mpg, Auto$weight)/(sd(Auto$mpg)*sd(Auto$weight))
+```
+
+$R^2 = \frac{SSR}{var(y)} ??$
+
+```{r}
+LSfit_res= resid(LSfit)
+sum(LSfit_res)
+
+
+LSfit = lm(mpg ~ weight, data = Auto)
+sum(LSfit$residuals)
+```
+
+
+### 6.3.1 (die ersten beiden)
+
+
+### 6.3.3
+
+
+
+## 2021-05-20
+
+```{r acceleration linear regression}
+my_lm_accel <- lm(acceleration ~ horsepower, data=Auto)
+my_summ_accel <- summary(my_lm_accel)
+Auto$origin <- factor(Auto$origin)
+```
+
+```{r acceleration RSS}
+sum((my_lm_accel$residuals)^2)
+```
+
+```{r acceleration R2}
+my_summ_accel$r.squared
+```
+
+```{r acceleration at 150hp}
+predict(my_lm_accel, data.frame(horsepower = 150))
+```
+
+```{r acceleration comfidence intervals}
+confint(my_lm_accel, level = 0.95)
+```
+
+```{r acceleration slm base plot}
+plot(acceleration ~ horsepower, data = Auto,col = rgb(0,0,1,0.5), pch=20);grid()
+abline(my_lm_accel, col="red", lwd=2)
+```
+
+```{r acceleration slm ggplot plot}
+plot_slm_acc <- Auto %>%
+  ggplot(aes(x=horsepower, y=acceleration, color= weight)) +
+  geom_point(alpha = 0.5, aes(color = origin)) + 
+  ggtitle("Influence of horsepower on acceleration by origin of car") +
+  geom_smooth(method = "lm", formula= y~x) +
+  facet_wrap(~origin, nrow= 2)
+
+plot_slm_acc
+```
+
+```{r acceleration multiple linear regression}
+my_mlm_accel <- lm(acceleration ~ horsepower + weight, data=Auto)
+my_mlm_summ_accel <- summary(my_mlm_accel)
+```
+
+```{r Dummy Coding}
+fit_a_o <- lm(acceleration ~ origin -1, data = Auto)
+summary(fit_a_o)
+```
+
+```{r}
+Auto %>%
+  group_by(origin) %>%
+  summarize(meanAccel = mean(acceleration, na.rm=TRUE))
+```
+
+```{r Model Matrix}
+mm1 = model.matrix(acceleration ~ horsepower + weight, data = Auto)
+mm2 = model.matrix(acceleration ~ horsepower + origin, data = Auto)
+mm1
+mm2
+```
+

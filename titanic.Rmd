@@ -1,0 +1,59 @@
+---
+title: "Titanic"
+author: "Sebastian Knoche"
+date: "`r format(file.info(knitr::current_input())$atime, '%Y-%m-%d')`"
+output:
+  html_document:
+    keep_md: yes
+  pdf_document: default
+---
+
+```{r eval=FALSE, echo=FALSE}
+#k = "https://www.razer.com/de-de/gaming-keyboards/Razer-BlackWidow-Lite/RZ03-02640300-R3W1"
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(titanic)
+data(titanic_train)
+```
+
+```{r}
+titanic_train %>% group_by(Sex) %>% summarize(mean_survival_chance = mean(Survived))
+```
+
+
+```{r}
+titanic_train %>% group_by(Pclass) %>% summarize(mean_survival_chance = mean(Survived))
+```
+
+```{r}
+titanic_train %>% group_by(Sex, Pclass) %>% summarize(mean_survival_chance = mean(Survived))
+```
+
+```{r}
+my_lm_survived_age_pcl <- lm(Survived ~ Age + factor(Pclass), data=titanic_train)
+my_summ_surv <- summary(my_lm_survived_age_pcl)
+my_summ_surv$coefficients
+```
+
+```{r}
+my_lm_survived_pcl <- lm(Survived ~ Pclass, data=titanic_train)
+my_summ_surv <- summary(my_lm_survived_pcl)
+my_summ_surv$coefficients
+```
+
+```{r}
+my_lm_survived_far <- lm(Survived ~ Fare, data=titanic_train)
+my_summ_surv <- summary(my_lm_survived_far)
+my_summ_surv$coefficients
+```
+
+```{r}
+my_lm_survived_pcl_far <- lm(Survived ~ Pclass + Fare, data=titanic_train)
+my_summ_surv <- summary(my_lm_survived_pcl_far)
+my_summ_surv$coefficients
+```
